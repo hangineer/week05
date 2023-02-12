@@ -1,4 +1,4 @@
-import userProductModal from './userProductModal.js';
+import productModal from './productModal.js';
 
 const { defineRule, Form, Field, ErrorMessage, configure } = VeeValidate;
 const { required, email, min, max } = VeeValidateRules;
@@ -16,7 +16,7 @@ configure({
 });
 
 const apiUrl = 'https://vue3-course-api.hexschool.io/v2';
-const apiPath = 'hexschoolvue';
+const apiPath = 'hannahtw';
 
 Vue.createApp({
   data() {
@@ -55,14 +55,15 @@ Vue.createApp({
     getProduct(id) {
       const url = `${apiUrl}/api/${apiPath}/product/${id}`;
       this.loadingStatus.loadingItem = id;
-      axios.get(url).then((response) => {
+      axios.get(url).then((res) => {
         this.loadingStatus.loadingItem = '';
-        this.product = response.data.product;
+        this.product = res.data.product;
         this.$refs.userProductModal.openModal();
       }).catch((err) => {
-        alert(err.response.data.message);
+        alert(err.res.data.message);
       });
     },
+    // 加入購物車
     addToCart(id, qty = 1) {
       const url = `${apiUrl}/api/${apiPath}/cart`;
       this.loadingStatus.loadingItem = id;
@@ -72,14 +73,15 @@ Vue.createApp({
       };
 
       this.$refs.userProductModal.hideModal();
-      axios.post(url, { data: cart }).then((response) => {
-        alert(response.data.message);
+      axios.post(url, { data: cart }).then((res) => {
+        alert(res.data.message);
         this.loadingStatus.loadingItem = '';
         this.getCart();
       }).catch((err) => {
-        alert(err.response.data.message);
+        alert(err.res.data.message);
       });
     },
+    // 更新購物車
     updateCart(data) {
       this.loadingStatus.loadingItem = data.id;
       const url = `${apiUrl}/api/${apiPath}/cart/${data.id}`;
@@ -87,15 +89,16 @@ Vue.createApp({
         product_id: data.product_id,
         qty: data.qty,
       };
-      axios.put(url, { data: cart }).then((response) => {
-        alert(response.data.message);
+      axios.put(url, { data: cart }).then((res) => {
+        alert(res.data.message);
         this.loadingStatus.loadingItem = '';
         this.getCart();
       }).catch((err) => {
-        alert(err.response.data.message);
+        alert(err.res.data.message);
         this.loadingStatus.loadingItem = '';
       });
     },
+    // 清空購物車內容
     deleteAllCarts() {
       const url = `${apiUrl}/api/${apiPath}/carts`;
       axios.delete(url).then((response) => {
@@ -113,26 +116,27 @@ Vue.createApp({
         alert(err.response.data.message);
       });
     },
+    // 刪除購物車特定品項ㄌ
     removeCartItem(id) {
       const url = `${apiUrl}/api/${apiPath}/cart/${id}`;
       this.loadingStatus.loadingItem = id;
-      axios.delete(url).then((response) => {
-        alert(response.data.message);
+      axios.delete(url).then((res) => {
+        alert(res.data.message);
         this.loadingStatus.loadingItem = '';
         this.getCart();
       }).catch((err) => {
-        alert(err.response.data.message);
+        alert(err.res.data.message);
       });
     },
     createOrder() {
       const url = `${apiUrl}/api/${apiPath}/order`;
       const order = this.form;
-      axios.post(url, { data: order }).then((response) => {
-        alert(response.data.message);
+      axios.post(url, { data: order }).then((res) => {
+        alert(res.data.message);
         this.$refs.form.resetForm();
         this.getCart();
       }).catch((err) => {
-        alert(err.response.data.message);
+        alert(err.res.data.message);
       });
     },
   },
